@@ -4,6 +4,16 @@ Sistema web multiplataforma para el control operativo, gestión de ventas, monit
 
 ---
 
+> ### 🎨 PROTOTIPO / MOCKUP INTERACTIVO EN FIGMA
+> 
+> ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+> 
+> 🔗 **[Hacer clic aquí para ver el Prototipo UI/UX Completo en Figma](https://www.figma.com/design/PnQw2kBJtRu8h7GZ2aCwvC/Untitled?node-id=0-1&t=5V9nfK3oPcQpQqwx-1)**
+> 
+> *Explora la arquitectura de interfaz, pantallas del Dashboard, Punto de Venta (POS), Panel de Alertas en tiempo real y componentes visuales del sistema.*
+
+---
+
 ## 🛠️ Stack Tecnológico
 
 ### Frontend & Interfaz
@@ -80,61 +90,61 @@ Para mantener una arquitectura limpia y modular en el frontend, se implementan t
 ## 🧮 Lógica de Sistemas Digitales
 
 ### 1. Codificación del Sensor de Nivel
-El nivel de combustible dentro del tanque es enviado por un sensor binario de 2 bits ($S_1 S_0$):
+El nivel de combustible dentro del tanque es enviado por un sensor binario de 2 bits (S1 S0):
 
-| $S_1$ | $S_0$ | Nivel de Combustible | Estado del Tanque |
+| S1 | S0 | Nivel de Combustible | Estado del Tanque |
 | :---: | :---: | :---: | :---: |
-| `0` | `0` | $0\%$ | Vacío (Crítico) |
-| `0` | `1` | $25\%$ | Bajo |
-| `1` | `0` | $50\%$ | Medio |
-| `1` | `1` | $100\%$ | Lleno |
+| `0` | `0` | 0% | Vacío (Crítico) |
+| `0` | `1` | 25% | Bajo |
+| `1` | `0` | 50% | Medio |
+| `1` | `1` | 100% | Lleno |
 
 ---
 
 ### 2. Tablas de Verdad, Mapas de Karnaugh y Compuertas Lógicas
 
-#### A. Alerta Crítica ($LED_{Rojo}$)
-Se activa **únicamente** cuando el nivel es $0\%$ ($S_1=0, S_0=0$).
+#### A. Alerta Crítica (LED_Rojo)
+Se activa **únicamente** cuando el nivel es 0% (S1=0, S0=0).
 
 * **Tabla de Verdad:**
-  * $S_1=0, S_0=0 \rightarrow LED_{Rojo} = 1$
-  * $S_1=0, S_0=1 \rightarrow LED_{Rojo} = 0$
-  * $S_1=1, S_0=0 \rightarrow LED_{Rojo} = 0$
-  * $S_1=1, S_0=1 \rightarrow LED_{Rojo} = 0$
+  * S1=0, S0=0 -> LED_Rojo = 1
+  * S1=0, S0=1 -> LED_Rojo = 0
+  * S1=1, S0=0 -> LED_Rojo = 0
+  * S1=1, S0=1 -> LED_Rojo = 0
 
 * **Ecuación Booleana Simplificada:**
-  $$LED_{Rojo} = \overline{S_1} \cdot \overline{S_0}$$
+  LED_Rojo = NOT(S1) AND NOT(S0)
   *(Implementación con compuertas NOR / AND con entradas invertidas)*
 
-#### B. Alerta de Nivel Bajo ($LED_{Amarillo}$)
-Se activa cuando el nivel es $25\%$ ($S_1=0, S_0=1$).
+#### B. Alerta de Nivel Bajo (LED_Amarillo)
+Se activa cuando el nivel es 25% (S1=0, S0=1).
 
 * **Tabla de Verdad:**
-  * $S_1=0, S_0=0 \rightarrow LED_{Amarillo} = 0$
-  * $S_1=0, S_0=1 \rightarrow LED_{Amarillo} = 1$
-  * $S_1=1, S_0=0 \rightarrow LED_{Amarillo} = 0$
-  * $S_1=1, S_0=1 \rightarrow LED_{Amarillo} = 0$
+  * S1=0, S0=0 -> LED_Amarillo = 0
+  * S1=0, S0=1 -> LED_Amarillo = 1
+  * S1=1, S0=0 -> LED_Amarillo = 0
+  * S1=1, S0=1 -> LED_Amarillo = 0
 
 * **Ecuación Booleana Simplificada:**
-  $$LED_{Amarillo} = \overline{S_1} \cdot S_0$$
+  LED_Amarillo = NOT(S1) AND S0
 
 ---
 
 ### 3. Decodificador de Tipos de Combustible
 Decodificador de 2 a 4 líneas para identificar la línea de producto en reportes y surtidores:
 
-| $C_1$ | $C_0$ | Salida Decodificada | Tipo de Combustible |
+| C1 | C0 | Salida Decodificada | Tipo de Combustible |
 | :---: | :---: | :---: | :---: |
-| `0` | `0` | $Y_0$ | Gasolina Especial |
-| `0` | `1` | $Y_1$ | Gasolina Premium |
-| `1` | `0` | $Y_2$ | Diésel |
-| `1` | `1` | $Y_3$ | Reserva / No Asignado |
+| `0` | `0` | Y0 | Gasolina Especial |
+| `0` | `1` | Y1 | Gasolina Premium |
+| `1` | `0` | Y2 | Diésel |
+| `1` | `1` | Y3 | Reserva / No Asignado |
 
 * **Ecuaciones del Decodificador:**
-  * $Y_0 = \overline{C_1} \cdot \overline{C_0}$
-  * $Y_1 = \overline{C_1} \cdot C_0$
-  * $Y_2 = C_1 \cdot \overline{C_0}$
-  * $Y_3 = C_1 \cdot C_0$
+  * Y0 = NOT(C1) AND NOT(C0)
+  * Y1 = NOT(C1) AND C0
+  * Y2 = C1 AND NOT(C0)
+  * Y3 = C1 AND C0
 
 ---
 
@@ -143,10 +153,3 @@ El cálculo de totales de venta se valida mediante operaciones a nivel de bits (
 * Multiplicación mediante desplazamientos a la izquierda (`<<`) y sumadores binarios completos (*Full Adders*).
 
 ---
-
-## 🚀 Instalación y Configuración Local
-
-1. **Clonar el repositorio:**
-   ```bash
-   git clone [https://github.com/tu-usuario/gestion-surtidor-gasolina.git](https://github.com/tu-usuario/gestion-surtidor-gasolina.git)
-   cd gestion-surtidor-gasolina
