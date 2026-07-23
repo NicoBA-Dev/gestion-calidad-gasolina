@@ -9,9 +9,8 @@ export function DispenserCard({ surtidor, onRecalibrate }) {
           <h3 className="text-lg font-bold">{surtidor.nombre}</h3>
         </div>
         <span
-          className={`w-2.5 h-2.5 rounded-full mt-1 ${
-            surtidor.ledRojo ? 'bg-status-critical' : surtidor.ledAmarillo ? 'bg-status-warning' : 'bg-status-online'
-          }`}
+          className={`w-2.5 h-2.5 rounded-full mt-1 ${surtidor.ledRojo ? 'bg-status-critical' : surtidor.ledAmarillo ? 'bg-status-warning' : 'bg-status-online'
+            }`}
         />
       </div>
 
@@ -45,12 +44,14 @@ export function DispenserCard({ surtidor, onRecalibrate }) {
         </div>
       </div>
 
-      <button
-        onClick={() => onRecalibrate(surtidor)}
-        className="mt-4 w-full text-sm border border-gray-300 rounded-md py-1.5 hover:bg-gray-50"
-      >
-        Recalibrar
-      </button>
+      {onRecalibrate && (
+        <button
+          onClick={() => onRecalibrate(surtidor)}
+          className="mt-4 w-full text-sm border border-gray-300 rounded-md py-1.5 hover:bg-gray-50"
+        >
+          Recalibrar
+        </button>
+      )}
     </div>
   )
 }
