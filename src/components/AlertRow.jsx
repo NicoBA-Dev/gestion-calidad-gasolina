@@ -1,21 +1,36 @@
 import { supabase } from '../lib/supabaseClient'
+import { useAuth } from '../hooks/useAuth'
 
 const TIPO_LABEL = {
-  CRITICO: { text: 'FALLA', color: 'bg-red-100 text-status-critical' },
-  BAJO: { text: 'AVISO', color: 'bg-amber-100 text-status-warning' },
-  FALLA: { text: 'FALLA', color: 'bg-red-100 text-status-critical' },
-  TIMEOUT: { text: 'TIMEOUT', color: 'bg-red-100 text-status-critical' },
-  DRIFT: { text: 'DRIFT', color: 'bg-amber-100 text-status-warning' },
+  CRITICO: { text: 'Crítico', color: 'bg-red-100 text-status-critical' },
+  BAJO: { text: 'Bajo', color: 'bg-amber-100 text-status-warning' },
+  FALLA: { text: 'Falla', color: 'bg-red-100 text-status-critical' },
+  TIMEOUT: { text: 'Timeout', color: 'bg-red-100 text-status-critical' },
+  DRIFT: { text: 'Desvío', color: 'bg-amber-100 text-status-warning' },
+}
+
+const ESTADO_LABEL = {
+  activa: { text: 'Sin revisar', color: 'bg-red-50 text-status-critical border-status-critical' },
+  reconocida: { text: 'En seguimiento', color: 'bg-amber-50 text-status-warning border-status-warning' },
+}
+
+function limpiarMensaje(mensaje, surtidorNombre) {
+  return mensaje.replace(` - ${surtidorNombre}`, '').replace(surtidorNombre, '').trim()
 }
 
 export function AlertRow({ alerta, onResolved }) {
+  const { user } = useAuth()
   const tipo = TIPO_LABEL[alerta.tipo] ?? { text: alerta.tipo, color: 'bg-gray-100 text-gray-500' }
+  const estadoInfo = ESTADO_LABEL[alerta.estado]
+  const mensajeLimpio = limpiarMensaje(alerta.mensaje, alerta.surtidorNombre)
 
-  const handleAck = async () => {
-    const { error } = await supabase
-      .from('alertas')
-      .update({ estado: 'reconocida', resuelta_at: new Date().toISOString() })
-      .eq('id', alerta.id)
+  const actualizar = async (nuevoEstado) => {
+    const payload = { estado: nuevoEstado }
+    if (nuevoEstado === 'resuelta') {
+      payload.resuelta_at = new Date().toISOString()
+      payload.resuelta_por = user.id
+    }
+    const { error } = await supabase.from('alertas').update(payload).eq('id', alerta.id)
     if (!error) onResolved()
   }
 
@@ -27,18 +42,33 @@ export function AlertRow({ alerta, onResolved }) {
       <td className="py-4 text-xs font-mono text-gray-500">
         {new Date(alerta.fecha).toLocaleTimeString('es-BO')}
       </td>
-      <td className="py-4">
-        <p className="font-semibold text-sm">{alerta.surtidorNombre}</p>
-        <p className="text-xs text-gray-400">Surtidor #{alerta.surtidorNumero}</p>
-      </td>
+      <td className="py-4 font-semibold text-sm">{alerta.surtidorNombre}</td>
       <td className="py-4">
         <span className={`text-xs font-mono px-2 py-0.5 rounded ${tipo.color}`}>{tipo.text}</span>
-        <p className="text-sm mt-1">{alerta.mensaje}</p>
+        <p className="text-sm mt-1">{mensajeLimpio}</p>
       </td>
-      <td className="py-4 pr-2 text-right">
-        <button onClick={handleAck} className="text-sm border border-gray-300 rounded-md px-3 py-1.5 hover:bg-gray-50">
-          ✓ Reconocer
-        </button>
+      <td className="py-4">
+        <span className={`text-xs font-medium px-2 py-1 rounded-md border ${estadoInfo.color}`}>
+          {estadoInfo.text}
+        </span>
+      </td>
+      <td className="py-4 pr-2 text-right whitespace-nowrap">
+        {alerta.estado === 'activa' && (
+          <button
+            onClick={() => actualizar('reconocida')}
+            className="text-sm border border-gray-300 rounded-md px-3 py-1.5 hover:bg-gray-50"
+          >
+            Estoy en esto
+          </button>
+        )}
+        {alerta.estado === 'reconocida' && (
+          <button
+            onClick={() => actualizar('resuelta')}
+            className="text-sm bg-status-online text-white rounded-md px-3 py-1.5 hover:opacity-90"
+          >
+            ✓ Marcar resuelta
+          </button>
+        )}
       </td>
     </tr>
   )

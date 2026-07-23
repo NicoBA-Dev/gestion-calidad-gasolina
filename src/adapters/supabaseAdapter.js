@@ -48,6 +48,7 @@ export function adaptAlerta(row) {
     mensaje: row.mensaje,
     ledRojo: row.led_rojo,
     ledAmarillo: row.led_amarillo,
+    estado: row.estado,
     fecha: row.fecha,
     surtidorNumero: row.surtidor_numero,
     surtidorNombre: row.surtidor_nombre,

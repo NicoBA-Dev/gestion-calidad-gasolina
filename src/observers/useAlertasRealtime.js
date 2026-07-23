@@ -7,12 +7,12 @@ export function useAlertasRealtime() {
   const [alertas, setAlertas] = useState([])
 
   const fetchSurtidores = useCallback(async () => {
-    const { data, error } = await supabase.from('v_surtidores_dashboard').select('*')
+    const { data, error } = await supabase.from('v_surtidores_dashboard').select('*').order('numero')
     if (!error) setSurtidores(adaptSurtidores(data))
   }, [])
 
   const fetchAlertas = useCallback(async () => {
-    const { data, error } = await supabase.from('v_alertas_activas').select('*')
+    const { data, error } = await supabase.from('v_alertas_pendientes').select('*')
     if (!error) setAlertas(adaptAlertas(data))
   }, [])
 

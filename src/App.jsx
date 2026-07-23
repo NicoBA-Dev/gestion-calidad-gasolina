@@ -18,7 +18,7 @@ function App() {
           <Route path="/" element={<ProtectedRoute><Layout title="Panel Principal"><Dashboard /></Layout></ProtectedRoute>} />
           <Route path="/dispensers" element={<ProtectedRoute><Layout title="Gestión de Surtidores"><Dispensers /></Layout></ProtectedRoute>} />
           <Route path="/pos" element={<ProtectedRoute><Layout title="Punto de Venta"><POS /></Layout></ProtectedRoute>} />
-          <Route path="/alerts" element={<ProtectedRoute><Layout title="Modo Alerta"><Alerts /></Layout></ProtectedRoute>} />
+          <Route path="/alerts" element={<ProtectedRoute><Layout title="Centro de Alertas"><Alerts /></Layout></ProtectedRoute>} />
           <Route path="/reports" element={<ProtectedRoute><Layout title="Reportes"><Reports /></Layout></ProtectedRoute>} />
         </Routes>
       </AuthProvider>

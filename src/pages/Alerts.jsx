@@ -18,16 +18,18 @@ export default function Alerts() {
     return true
   })
 
+  const sinRevisar = alertas.filter((a) => a.estado === 'activa').length
+
   return (
     <div>
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h2 className="text-2xl font-bold mb-1">Centro de Monitoreo Lógico</h2>
-          <p className="text-sm text-gray-500">Telemetría en tiempo real y resolución de compuertas del hardware.</p>
+          <h2 className="text-2xl font-bold mb-1">Centro de Alertas</h2>
+          <p className="text-sm text-gray-500">Monitoreo en tiempo real de todos los surtidores.</p>
         </div>
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm px-5 py-3 text-right">
-          <p className="text-xs font-mono text-gray-400">ALERTAS SIN RESOLVER</p>
-          <p className="text-2xl font-bold text-status-critical">{String(alertas.length).padStart(2, '0')}</p>
+          <p className="text-xs font-mono text-gray-400">SIN REVISAR</p>
+          <p className="text-2xl font-bold text-status-critical">{String(sinRevisar).padStart(2, '0')}</p>
         </div>
       </div>
 
@@ -52,6 +54,7 @@ export default function Alerts() {
               <th className="py-3">HORA</th>
               <th className="py-3">SURTIDOR</th>
               <th className="py-3">CONDICIÓN</th>
+              <th className="py-3">ESTADO</th>
               <th className="py-3 pr-2 text-right">ACCIÓN</th>
             </tr>
           </thead>
