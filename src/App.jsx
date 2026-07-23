@@ -14,6 +14,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<ProtectedRoute><Layout title="Panel Principal"><Dashboard /></Layout></ProtectedRoute>} />
           <Route path="/dispensers" element={<ProtectedRoute><Layout title="Gestión de Surtidores"><Dispensers /></Layout></ProtectedRoute>} />
           <Route path="/pos" element={<ProtectedRoute><Layout title="Punto de Venta"><POS /></Layout></ProtectedRoute>} />

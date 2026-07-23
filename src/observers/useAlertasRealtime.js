@@ -35,5 +35,5 @@ export function useAlertasRealtime() {
     }
   }, [fetchSurtidores, fetchAlertas])
 
-  return { surtidores, alertas }
+  return { surtidores, alertas, refetchSurtidores: fetchSurtidores, refetchAlertas: fetchAlertas }
 }
