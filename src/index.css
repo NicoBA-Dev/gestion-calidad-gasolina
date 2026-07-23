@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-red: #8B1E1E;
+  --color-brand-red-dark: #6B1616;
+  --color-bg-base: #F7F5F2;
+  --color-status-online: #16A34A;
+  --color-status-warning: #D97706;
+  --color-status-critical: #DC2626;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+body {
+  background-color: var(--color-bg-base);
+}
