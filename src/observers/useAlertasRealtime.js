@@ -1,10 +1,13 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { adaptSurtidores, adaptAlertas } from '../adapters/supabaseAdapter'
+
+let contador = 0
 
 export function useAlertasRealtime() {
   const [surtidores, setSurtidores] = useState([])
   const [alertas, setAlertas] = useState([])
+  const idCanal = useRef(`realtime-${++contador}-${Date.now()}`)
 
   const fetchSurtidores = useCallback(async () => {
     const { data, error } = await supabase.from('v_surtidores_dashboard').select('*').order('numero')
@@ -21,7 +24,7 @@ export function useAlertasRealtime() {
     fetchAlertas()
 
     const channel = supabase
-      .channel('realtime-surtidores-alertas')
+      .channel(idCanal.current)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'surtidores' }, () => {
         fetchSurtidores()
       })

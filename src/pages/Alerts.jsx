@@ -9,7 +9,7 @@ const FILTROS = [
 ]
 
 export default function Alerts() {
-  const { alertas, refetchAlertas } = useAlertasRealtime()
+  const { surtidores, alertas, refetchAlertas } = useAlertasRealtime()
   const [filtro, setFiltro] = useState('todas')
 
   const visibles = alertas.filter((a) => {
@@ -60,7 +60,12 @@ export default function Alerts() {
           </thead>
           <tbody>
             {visibles.map((a) => (
-              <AlertRow key={a.id} alerta={a} onResolved={refetchAlertas} />
+              <AlertRow
+                key={a.id}
+                alerta={a}
+                surtidor={surtidores.find((s) => s.numero === a.surtidorNumero)}
+                onResolved={refetchAlertas}
+              />
             ))}
           </tbody>
         </table>

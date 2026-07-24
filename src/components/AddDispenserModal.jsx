@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { SurtidorFactory } from '../factories/SurtidorFactory'
+import { useToast } from '../hooks/useToast'
 
 export function AddDispenserModal({ onClose }) {
   const [numero, setNumero] = useState('')
@@ -9,6 +10,7 @@ export function AddDispenserModal({ onClose }) {
   const [capacidad, setCapacidad] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const { showToast } = useToast()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -22,9 +24,11 @@ export function AddDispenserModal({ onClose }) {
       })
       const { error } = await supabase.from('surtidores').insert(nuevo)
       if (error) throw error
+      showToast('success', 'Surtidor creado con éxito', `${nuevo.nombre} — ${nuevo.capacidad_litros.toLocaleString()} L de capacidad`)
       onClose()
     } catch (err) {
       setError(err.message)
+      showToast('error', 'No se pudo crear el surtidor', err.message)
     } finally {
       setLoading(false)
     }

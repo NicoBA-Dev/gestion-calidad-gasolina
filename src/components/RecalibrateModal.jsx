@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { useToast } from '../hooks/useToast'
 
 export function RecalibrateModal({ surtidor, onClose }) {
   const [nivel, setNivel] = useState(surtidor.nivelLitros)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const { showToast } = useToast()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -15,8 +17,13 @@ export function RecalibrateModal({ surtidor, onClose }) {
       .update({ nivel_litros: Number(nivel) })
       .eq('id', surtidor.id)
     setLoading(false)
-    if (error) setError(error.message)
-    else onClose()
+    if (error) {
+      setError(error.message)
+      showToast('error', 'No se pudo recalibrar', error.message)
+    } else {
+      showToast('success', 'Surtidor recalibrado', `${surtidor.nombre} ahora tiene ${Number(nivel).toLocaleString()} L`)
+      onClose()
+    }
   }
 
   return (

@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../hooks/useAuth'
+import { useToast } from '../hooks/useToast'
 
 const TIPO_LABEL = {
   CRITICO: { text: 'Crítico', color: 'bg-red-100 text-status-critical' },
@@ -14,15 +15,25 @@ const ESTADO_LABEL = {
   reconocida: { text: 'En seguimiento', color: 'bg-amber-50 text-status-warning border-status-warning' },
 }
 
-function limpiarMensaje(mensaje, surtidorNombre) {
-  return mensaje.replace(` - ${surtidorNombre}`, '').replace(surtidorNombre, '').trim()
+function construirMensaje(mensajeOriginal, surtidorNombre, surtidor) {
+  const base = mensajeOriginal
+    .replace(/\s*\(\d+(\.\d+)?%\)/, '')
+    .replace(` - ${surtidorNombre}`, '')
+    .replace(surtidorNombre, '')
+    .trim()
+
+  if (surtidor && typeof surtidor.porcentaje === 'number') {
+    return `${base} (${surtidor.porcentaje}% actual)`
+  }
+  return base
 }
 
-export function AlertRow({ alerta, onResolved }) {
+export function AlertRow({ alerta, surtidor, onResolved }) {
   const { user } = useAuth()
+  const { showToast } = useToast()
   const tipo = TIPO_LABEL[alerta.tipo] ?? { text: alerta.tipo, color: 'bg-gray-100 text-gray-500' }
   const estadoInfo = ESTADO_LABEL[alerta.estado]
-  const mensajeLimpio = limpiarMensaje(alerta.mensaje, alerta.surtidorNombre)
+  const mensaje = construirMensaje(alerta.mensaje, alerta.surtidorNombre, surtidor)
 
   const actualizar = async (nuevoEstado) => {
     const payload = { estado: nuevoEstado }
@@ -31,7 +42,12 @@ export function AlertRow({ alerta, onResolved }) {
       payload.resuelta_por = user.id
     }
     const { error } = await supabase.from('alertas').update(payload).eq('id', alerta.id)
-    if (!error) onResolved()
+    if (error) {
+      showToast('error', 'No se pudo actualizar la alerta', error.message)
+    } else {
+      showToast('success', nuevoEstado === 'resuelta' ? 'Alerta resuelta' : 'Alerta en seguimiento', alerta.surtidorNombre)
+      onResolved()
+    }
   }
 
   return (
@@ -45,7 +61,7 @@ export function AlertRow({ alerta, onResolved }) {
       <td className="py-4 font-semibold text-sm">{alerta.surtidorNombre}</td>
       <td className="py-4">
         <span className={`text-xs font-mono px-2 py-0.5 rounded ${tipo.color}`}>{tipo.text}</span>
-        <p className="text-sm mt-1">{mensajeLimpio}</p>
+        <p className="text-sm mt-1">{mensaje}</p>
       </td>
       <td className="py-4">
         <span className={`text-xs font-medium px-2 py-1 rounded-md border ${estadoInfo.color}`}>

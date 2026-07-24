@@ -8,19 +8,26 @@ import Dispensers from './pages/Dispensers'
 import POS from './pages/POS'
 import Alerts from './pages/Alerts'
 import Reports from './pages/Reports'
+import AuditLog from './pages/AuditLog'
+import { ToastProvider } from './context/ToastContext'
+import { ToastContainer } from './components/ToastContainer'
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<ProtectedRoute><Layout title="Panel Principal"><Dashboard /></Layout></ProtectedRoute>} />
-          <Route path="/dispensers" element={<ProtectedRoute><Layout title="Gestión de Surtidores"><Dispensers /></Layout></ProtectedRoute>} />
-          <Route path="/pos" element={<ProtectedRoute><Layout title="Punto de Venta"><POS /></Layout></ProtectedRoute>} />
-          <Route path="/alerts" element={<ProtectedRoute><Layout title="Centro de Alertas"><Alerts /></Layout></ProtectedRoute>} />
-          <Route path="/reports" element={<ProtectedRoute><Layout title="Reportes"><Reports /></Layout></ProtectedRoute>} />
-        </Routes>
+        <ToastProvider>
+          <ToastContainer />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<ProtectedRoute><Layout title="Panel Principal"><Dashboard /></Layout></ProtectedRoute>} />
+            <Route path="/dispensers" element={<ProtectedRoute><Layout title="Gestión de Surtidores"><Dispensers /></Layout></ProtectedRoute>} />
+            <Route path="/pos" element={<ProtectedRoute><Layout title="Punto de Venta"><POS /></Layout></ProtectedRoute>} />
+            <Route path="/alerts" element={<ProtectedRoute><Layout title="Centro de Alertas"><Alerts /></Layout></ProtectedRoute>} />
+            <Route path="/reports" element={<ProtectedRoute><Layout title="Reportes"><Reports /></Layout></ProtectedRoute>} />
+            <Route path="/audit" element={<ProtectedRoute><Layout title="Auditoría"><AuditLog /></Layout></ProtectedRoute>} />
+          </Routes>
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   )

@@ -55,6 +55,21 @@ export function adaptAlerta(row) {
   }
 }
 
+export function adaptLog(row) {
+  return {
+    id: row.id,
+    tabla: row.tabla_afectada,
+    accion: row.accion,
+    registroId: row.registro_id,
+    detalle: row.detalle,
+    hash: row.hash_verificacion,
+    fecha: row.created_at,
+  }
+}
+export function adaptLogs(rows) {
+  return rows.map(adaptLog)
+}
+
 export function adaptAlertas(rows) {
   return rows.map(adaptAlerta)
 }

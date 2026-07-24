@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAlertasRealtime } from '../observers/useAlertasRealtime'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../hooks/useAuth'
+import { useToast } from '../hooks/useToast'
 import { POSKeypad } from '../components/POSKeypad'
 import { AuditLogPreview } from '../components/AuditLogPreview'
 import { SurtidorSelector } from '../components/SurtidorSelector'
@@ -12,6 +13,7 @@ const NOMBRES = { '00': 'Especial', '01': 'Premium', '10': 'Diésel' }
 export default function POS() {
   const { surtidores } = useAlertasRealtime()
   const { user } = useAuth()
+  const { showToast } = useToast()
   const [surtidorId, setSurtidorId] = useState(null)
   const [litros, setLitros] = useState('')
   const [folio, setFolio] = useState(null)
@@ -54,9 +56,12 @@ export default function POS() {
       transaccion_ref: ref,
     })
     setLoading(false)
-    if (error) setError(error.message)
-    else {
+    if (error) {
+      setError(error.message)
+      showToast('error', 'No se pudo procesar la venta', error.message)
+    } else {
       setFolio(ref)
+      showToast('success', 'Venta registrada', `Folio ${ref} — ${Number(litros)} L por ${total} Bs`)
       setLitros('')
     }
   }
