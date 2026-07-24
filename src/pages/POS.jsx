@@ -6,6 +6,8 @@ import { useToast } from '../hooks/useToast'
 import { POSKeypad } from '../components/POSKeypad'
 import { AuditLogPreview } from '../components/AuditLogPreview'
 import { SurtidorSelector } from '../components/SurtidorSelector'
+import { CopyButton } from '../components/CopyButton'
+
 
 const PRECIOS = { '00': 3.74, '01': 4.79, '10': 3.72 }
 const NOMBRES = { '00': 'Especial', '01': 'Premium', '10': 'Diésel' }
@@ -99,7 +101,12 @@ export default function POS() {
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
           <div className="flex justify-between items-center mb-3">
             <h3 className="font-bold">Resumen de Venta</h3>
-            {folio && <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">{folio}</span>}
+            {folio && (
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">{folio}</span>
+                <CopyButton texto={folio} etiqueta="Folio" />
+              </div>
+            )}
           </div>
           <div className="text-sm space-y-1 text-gray-600">
             <p>Surtidor: <span className="font-semibold text-black">{surtidor?.nombre ?? 'Ninguno seleccionado'}</span></p>

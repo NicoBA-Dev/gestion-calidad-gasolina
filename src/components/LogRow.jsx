@@ -1,3 +1,5 @@
+import { CopyButton } from './CopyButton'
+
 const ACCION_CONFIG = {
   INSERT: { text: 'Creación', color: 'text-status-online', border: 'border-l-status-online' },
   UPDATE: { text: 'Modificación', color: 'text-status-warning', border: 'border-l-status-warning' },
@@ -27,7 +29,12 @@ export function LogRow({ log }) {
       </td>
       <td className="py-3 text-sm font-medium">{TABLA_LABEL[log.tabla] ?? log.tabla}</td>
       <td className={`py-3 text-sm font-medium ${accion.color}`}>{accion.text}</td>
-      <td className="py-3 text-xs font-mono text-gray-400">{log.registroId?.slice(0, 8)}</td>
+      <td className="py-3">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-mono text-gray-400">{log.registroId?.slice(0, 8)}</span>
+          <CopyButton texto={log.registroId} etiqueta="ID de registro" />
+        </div>
+      </td>
       <td className="py-3 pr-3">
         <span
           title="Este registro no fue modificado desde su creación"
